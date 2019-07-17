@@ -35,6 +35,13 @@ func runCsr() {
 	mySet.StringVar(&names, "names", "", "CSR names JSON file location")
 	mySet.Parse(os.Args[2:])
 
+	if os.Getenv("VAULT_TOKEN") != "" {
+		vaultToken = os.Getenv("VAULT_TOKEN")
+	}
+	if os.Getenv("VAULT_ADDR") != "" {
+		vaultAddress = os.Getenv("VAULT_ADDR")
+	}
+
 	if vaultAddress == "" {
 		log.Printf("ERROR: %v\n", "Vault address has to be specified.")
 		return
@@ -50,13 +57,6 @@ func runCsr() {
 	if names == "" {
 		log.Printf("ERROR: %v\n", "CSR names JSON file location has to be specified.")
 		return
-	}
-
-	if os.Getenv("VAULT_TOKEN") != "" {
-		vaultToken = os.Getenv("VAULT_TOKEN")
-	}
-	if os.Getenv("VAULT_ADDR") != "" {
-		vaultAddress = os.Getenv("VAULT_ADDR")
 	}
 
 	manager, _ := vault.GetManager(vaultToken, &vaultapi.Config{Address: vaultAddress})
